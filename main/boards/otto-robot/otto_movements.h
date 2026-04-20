@@ -78,6 +78,7 @@ public:
     void Crusaito(float steps = 1, int period = 900, int height = 20, int dir = FORWARD);
     void Flapping(float steps = 1, int period = 1000, int height = 20, int dir = FORWARD);
     void WhirlwindLeg(float steps = 1, int period = 300, int amplitude = 30);
+    void VictoryDance(float steps = 4, int period = 700);
 
     // -- 手部动作
     void HandsUp(int period = 1000, int dir = 0);      // 双手举起

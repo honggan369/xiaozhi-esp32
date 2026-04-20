@@ -947,6 +947,44 @@ void Otto::Showcase() {
     Walk(3, 1000, BACKWARD, 50);
 }
 
+void Otto::VictoryDance(float steps, int period) {
+    if (GetRestState() == true) {
+        SetRestState(false);
+    }
+
+    steps = std::max(1.0f, std::min(20.0f, steps));
+    period = std::max(250, std::min(1500, period));
+
+    int prep[SERVO_COUNT] = {90, 90, 90, 90, HAND_HOME_POSITION, 180 - HAND_HOME_POSITION};
+    if (has_hands_) {
+        prep[LEFT_HAND] = 150;
+        prep[RIGHT_HAND] = 30;
+    }
+    MoveServos(300, prep);
+    vTaskDelay(pdMS_TO_TICKS(120));
+
+    int A[SERVO_COUNT] = {18, 18, 22, 22, 0, 0};
+    int O[SERVO_COUNT] = {0, 0, 8, -8, HAND_HOME_POSITION - 90, HAND_HOME_POSITION};
+    double phase_diff[SERVO_COUNT] = {DEG2RAD(0), DEG2RAD(180), DEG2RAD(-90), DEG2RAD(90), 0, 0};
+
+    if (has_hands_) {
+        A[LEFT_HAND] = 30;
+        A[RIGHT_HAND] = 30;
+        phase_diff[LEFT_HAND] = DEG2RAD(90);
+        phase_diff[RIGHT_HAND] = DEG2RAD(-90);
+    }
+
+    Execute(A, O, period, phase_diff, steps);
+
+    int bow[SERVO_COUNT] = {90, 90, 125, 55, HAND_HOME_POSITION, 180 - HAND_HOME_POSITION};
+    if (has_hands_) {
+        bow[LEFT_HAND] = 120;
+        bow[RIGHT_HAND] = 60;
+    }
+    MoveServos(300, bow);
+    vTaskDelay(pdMS_TO_TICKS(200));
+}
+
 void Otto::EnableServoLimit(int diff_limit) {
     for (int i = 0; i < SERVO_COUNT; i++) {
         if (servo_pins_[i] != -1) {

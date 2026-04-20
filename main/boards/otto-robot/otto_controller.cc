@@ -63,6 +63,7 @@ private:
         ACTION_GREETING = 23,  // 打招呼
         ACTION_SHY = 24,        // 害羞
         ACTION_SHOWCASE = 28,   // 展示动作
+        ACTION_VICTORY_DANCE = 29,  // 胜利舞
         ACTION_HOME = 17,
         ACTION_SERVO_SEQUENCE = 18,  // 舵机序列（自编程）
         ACTION_WHIRLWIND_LEG = 19    // 旋风腿
@@ -337,6 +338,9 @@ private:
                         case ACTION_SHOWCASE:
                             controller->otto_.Showcase();
                             break;
+                        case ACTION_VICTORY_DANCE:
+                            controller->otto_.VictoryDance(params.steps, params.speed);
+                            break;
                         case ACTION_UPDOWN:
                             controller->otto_.UpDown(params.steps, params.speed, params.amount);
                             break;
@@ -531,7 +535,7 @@ public:
                            "基础动作：walk(行走，需steps/speed/direction/arm_swing)、turn(转身，需steps/speed/direction/arm_swing)、jump(跳跃，需steps/speed)、"
                            "swing(摇摆，需steps/speed/amount)、moonwalk(太空步，需steps/speed/direction/amount)、bend(弯曲，需steps/speed/direction)、"
                            "shake_leg(摇腿，需steps/speed/direction)、updown(上下运动，需steps/speed/amount)、whirlwind_leg(旋风腿，需steps/speed/amount)；"
-                           "固定动作：sit(坐下)、showcase(展示动作)、home(复位)；"
+                           "固定动作：sit(坐下)、showcase(展示动作)、victory_dance(胜利舞，需steps/speed)、home(复位)；"
                            "手部动作(需手部舵机)：hands_up(举手，需speed/direction)、hands_down(放手，需speed/direction)、hand_wave(挥手，需direction)、"
                            "windmill(大风车，需steps/speed/amount)、takeoff(起飞，需steps/speed/amount)、fitness(健身，需steps/speed/amount)、"
                            "greeting(打招呼，需direction/steps)、shy(害羞，需direction/steps)、radio_calisthenics(广播体操)、magic_circle(爱的魔力转圈圈)",
@@ -587,6 +591,9 @@ public:
                                    return true;
                                } else if (action == "showcase") {
                                    QueueAction(ACTION_SHOWCASE, 1, 0, 0, 0);
+                                   return true;
+                               } else if (action == "victory_dance") {
+                                   QueueAction(ACTION_VICTORY_DANCE, steps, speed, 0, 0);
                                    return true;
                                } else if (action == "home") {
                                    QueueAction(ACTION_HOME, 1, 1000, 1, 0);
@@ -654,7 +661,7 @@ public:
                                    QueueAction(ACTION_MAGIC_CIRCLE, 1, 0, 0, 0);
                                    return true;
                                } else {
-                                   return "错误：无效的动作名称。可用动作：walk, turn, jump, swing, moonwalk, bend, shake_leg, updown, whirlwind_leg, sit, showcase, home, hands_up, hands_down, hand_wave, windmill, takeoff, fitness, greeting, shy, radio_calisthenics, magic_circle";
+                                   return "错误：无效的动作名称。可用动作：walk, turn, jump, swing, moonwalk, bend, shake_leg, updown, whirlwind_leg, sit, showcase, victory_dance, home, hands_up, hands_down, hand_wave, windmill, takeoff, fitness, greeting, shy, radio_calisthenics, magic_circle";
                                }
                            });
 
