@@ -227,7 +227,7 @@ public:
 private:
     void InitializeWebSocketControlServer() {
         ws_control_server_ = new WebSocketControlServer();
-        if (!ws_control_server_->Start(8080)) {
+        if (!ws_control_server_->Start(80)) {
             delete ws_control_server_;
             ws_control_server_ = nullptr;
         }
