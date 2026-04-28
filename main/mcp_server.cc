@@ -62,6 +62,21 @@ void McpServer::AddCommonTools() {
             codec->SetOutputVolume(properties["volume"].value<int>());
             return true;
         });
+
+    auto display = board.GetDisplay();
+    if (display) {
+        AddTool("self.screen.set_emotion",
+            "Set screen emotion/icon directly. Use this when user asks for an expression. "
+            "Recommended values: neutral, smile, grin, laugh, wink, sad_tear, frown, angry, surprised, thinking, sleep, dizzy, crying.",
+            PropertyList({
+                Property("emotion", kPropertyTypeString)
+            }),
+            [display](const PropertyList& properties) -> ReturnValue {
+                auto emotion = properties["emotion"].value<std::string>();
+                display->SetEmotion(emotion.c_str());
+                return true;
+            });
+    }
     
     auto backlight = board.GetBacklight();
     if (backlight) {
@@ -78,7 +93,6 @@ void McpServer::AddCommonTools() {
     }
 
 #ifdef HAVE_LVGL
-    auto display = board.GetDisplay();
     if (display && display->GetTheme() != nullptr) {
         AddTool("self.screen.set_theme",
             "Set the theme of the screen. The theme can be `light` or `dark`.",

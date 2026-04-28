@@ -558,6 +558,7 @@ void Application::InitializeProtocol() {
         } else if (strcmp(type->valuestring, "llm") == 0) {
             auto emotion = cJSON_GetObjectItem(root, "emotion");
             if (cJSON_IsString(emotion)) {
+                ESP_LOGI(TAG, "Emotion update: %s", emotion->valuestring);
                 Schedule([display, emotion_str = std::string(emotion->valuestring)]() {
                     display->SetEmotion(emotion_str.c_str());
                 });
@@ -1116,4 +1117,3 @@ void Application::ResetProtocol() {
         protocol_.reset();
     });
 }
-
