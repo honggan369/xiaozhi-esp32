@@ -20,6 +20,32 @@
 
 #define TAG "MCP"
 
+static std::string NormalizeEmotionName(const std::string& emotion) {
+    std::string normalized = emotion;
+    std::transform(normalized.begin(), normalized.end(), normalized.begin(), ::tolower);
+
+    if (normalized == "smile" || normalized == "grin") {
+        return "happy";
+    }
+    if (normalized == "laugh") {
+        return "laughing";
+    }
+    if (normalized == "wink") {
+        return "winking";
+    }
+    if (normalized == "sad_tear" || normalized == "frown") {
+        return "sad";
+    }
+    if (normalized == "sleep") {
+        return "sleepy";
+    }
+    if (normalized == "dizzy") {
+        return "confused";
+    }
+
+    return normalized;
+}
+
 McpServer::McpServer() {
 }
 
@@ -67,12 +93,13 @@ void McpServer::AddCommonTools() {
     if (display) {
         AddTool("self.screen.set_emotion",
             "Set screen emotion/icon directly. Use this when user asks for an expression. "
-            "Recommended values: neutral, smile, grin, laugh, wink, sad_tear, frown, angry, surprised, thinking, sleep, dizzy, crying.",
+            "Recommended values: neutral, happy, laughing, winking, sad, angry, surprised, thinking, sleepy, crying, confused. "
+            "Compatible aliases such as smile/grin/laugh/wink/sad_tear/frown/sleep/dizzy are also supported.",
             PropertyList({
                 Property("emotion", kPropertyTypeString)
             }),
             [display](const PropertyList& properties) -> ReturnValue {
-                auto emotion = properties["emotion"].value<std::string>();
+                auto emotion = NormalizeEmotionName(properties["emotion"].value<std::string>());
                 display->SetEmotion(emotion.c_str());
                 return true;
             });
